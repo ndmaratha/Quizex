@@ -8,49 +8,50 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  password  String
-  email     String    @unique
-  quizzes   Quiz[]    // Relation with Quiz
+  userId   String @id @default(cuid())
+  userName String
+  password String
+  email    String @unique
+  quiz     Quiz[]
 }
 
 model Quiz {
-  quizeId        Int       @id @default(autoincrement()) // Unique identifier for each quiz
-  title     String    // Title of the quiz
-  createdOn DateTime   @default(now())      
-  impression     Int?       @default(0)   
-  qtype          QuizType   // Enum for the type of quiz (qna or poll)
-  questions Question[] // Relation to multiple Questions
-  userId    Int       // Foreign key for User
-  user      User      @relation(fields: [userId], references: [id]) // Relation to User
+  quizId         String     @id @default(cuid())
+  quizName       String
+  quizCreatedOn  DateTime   @default(now())
+  quizImpression Int?       @default(0)
+  quizType       QuizType
+  questions      Question[]
+  userId         String
+  user           User       @relation(fields: [userId], references: [userId])
 }
 
 model Question {
-  qid            Int        @id @default(autoincrement()) // Unique identifier for each question
-  qtitle         String     // Title of the question
-  qanalysis      Analysis[]  // Relation with Analysis
-  optionType     String
-  op1            String      // First compulsory option
-  op2            String      // Second compulsory option
-  op3            String?     // Optional third option
-  op4            String?     // Optional fourth option
-  quizId         Int         // Foreign key for Quiz
-  correctAns     Int?
-  quiz           Quiz        @relation(fields: [quizId], references: [quizeId]) // Relation to Quiz
+  questionId       String     @id @default(cuid())
+  questionTitle    String
+  questionAnalysis Analysis[]
+  optionType       String
+  optionOne        String
+  optionTwo        String
+  optionThree      String?
+  optionFour       String?
+  quizId           String
+  questionTimer    Int?
+  correctAns       Int?
+  quiz             Quiz       @relation(fields: [quizId], references: [quizId], onDelete: Cascade)
 }
 
 model Analysis {
-  aid         Int     @id @default(autoincrement()) // Unique identifier for each analysis
-  q_attempted Int?    @default(0)   // Number of attempts
-  q_correct   Int?    @default(0) // Number of correct answers
-  q_incorrect Int?    @default(0)// Number of incorrect answers
-  op1         Int?    @default(0)// Count for option 1
-  op2         Int?    @default(0)// Count for option 2
-  op3         Int?    @default(0)// Count for option 3
-  op4         Int?    @default(0)// Count for option 4
-  questionId  Int     // Foreign key for Question
-  question    Question @relation(fields: [questionId], references: [qid]) // Relation to Question
+  analysisId                  String   @id @default(cuid())
+  questionAttemptedCount      Int?     @default(0)
+  questionCorrectlyAnswered   Int?     @default(0)
+  questionIncorrectlyAnswered Int?     @default(0)
+  ChosedOptionOneCount        Int?     @default(0)
+  ChosedOptionTwoCount        Int?     @default(0)
+  ChosedOptionThreeCount      Int?     @default(0)
+  ChosedOptionFourCount       Int?     @default(0)
+  questionId                  String
+  question                    Question @relation(fields: [questionId], references: [questionId], onDelete: Cascade)
 }
 
 enum QuizType {

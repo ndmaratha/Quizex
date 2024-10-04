@@ -1,0 +1,108 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+.login-container {
+	width: 1280px;
+	height: 832px;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.login-box {
+	width: 1066px;
+	height: 611px;
+	border-radius: 15px;
+	position: relative;
+	box-shadow: 0px 0px 30px 0px #00000026;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4em;
+}
+.login-title {
+	font-family: Jomhuria;
+	font-size: 100px;
+	font-weight: 400;
+	line-height: 100px;
+	text-align: left;
+	color: #474444;
+}
+.button-group {
+	width: 410px;
+	height: 37px;
+
+	border-radius: 10px 0px 0px 0px;
+	display: flex;
+	justify-content: space-between;
+}
+.button-group .text-button-login {
+	box-shadow: 2px 2px 2px rgb(102, 102, 244);
+	border: none;
+	width: 30%;
+	border-radius: 15px;
+	background: none;
+}
+.button-group .text-button {
+	border: none;
+	width: 30%;
+	border-radius: 15px;
+}
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2em;
+}
+.form-group {
+	width: 518px;
+	height: 200px;
+	border-radius: 10px 10px 0px 0px;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+.form-group div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+}
+.form-group div .label {
+	font-family: Jomhuria;
+	font-size: 20px;
+	font-weight: 40;
+	color: #474444;
+
+	width: 20%;
+	height: 100%;
+}
+.form-group div .input-field {
+	background-color: #b0aeae;
+	width: 80%;
+	height: 100%;
+}
+.submit-button {
+	width: 274px;
+	height: 38px;
+
+	gap: 0px;
+	border-radius: 8px;
+	opacity: 0px;
+	background: #a9bcff;
+	font-family: Poppins;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 30px;
+	text-align: center;
+}
+.error-message {
+	color: red;
+	font-family: Poppins;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 30px;
+	text-align: center;
+}

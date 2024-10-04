@@ -14,30 +14,19 @@ const authenticateToken = async (
 			? authHeader.split(" ")[1]
 			: null;
 
-	if (!token) return res.sendStatus(401); // Unauthorized if no token is found
+	if (!token)
+		return res
+			.sendStatus(401)
+			.json({ msg: "Token is Not Provided Or Unauthorized" }); // Unauthorized if no token is found
 
 	try {
-		// Verify the JWT using the secret and extract the payload (e.g., user id)
 		const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-			id: number;
+			email: string;
 		};
-
-		// Attach the userId to the request object for later use
-		req.userId = decoded.id;
-
 		next(); // Proceed to the next middleware or route handler
 	} catch (err) {
 		return res.sendStatus(403); // Forbidden if token verification fails
 	}
 };
-
-// Extend the Express Request interface to include userId
-declare global {
-	namespace Express {
-		interface Request {
-			userId?: number; // Add userId as a number to Request
-		}
-	}
-}
 
 export default authenticateToken;

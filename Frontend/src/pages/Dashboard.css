@@ -1,0 +1,68 @@
+* {
+	margin: 0%;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.first-div {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 2rem;
+}
+
+.info-box-quiz,
+.info-box-question,
+.info-box-impression {
+	width: 150px;
+	height: 150px;
+	color: #ff5d01; /* Different colors for each box */
+	font-family: Poppins;
+	font-weight: 600;
+	background: #ffffff;
+	text-align: center;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column; /* Vertical alignment of the count and label */
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+/* Adjusting individual styles for each box */
+.info-box-quiz {
+	color: #ff5d01; /* Orange for quizzes */
+}
+
+.info-box-question {
+	color: #60b84b; /* Green for questions */
+}
+
+.info-box-impression {
+	color: #5076ff; /* Blue for impressions */
+}
+
+/* The number will be larger */
+.info-box-quiz span,
+.info-box-question span,
+.info-box-impression span {
+	font-size: 45px; /* Make the count bigger */
+	line-height: 50px;
+	margin-bottom: auto; /* Push the number to the top */
+}
+
+/* Label text below the number */
+.info-box-quiz div,
+.info-box-question div,
+.info-box-impression div {
+	font-size: 18px; /* Regular text size for the label */
+	line-height: 25px;
+	margin-top: auto; /* Push the label to the bottom */
+}
+
+.trending-quiz {
+	display: flex;
+	flex-direction: column;
+}

@@ -1,0 +1,79 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.heading {
+	font-family: Jomhuria;
+	font-size: 50px;
+	font-weight: 400;
+	line-height: 100px;
+	text-align: left;
+	color: #474444;
+	margin: 3px;
+	padding: 3px;
+}
+
+.pages-button {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	gap: 1rem;
+	align-items: center;
+}
+
+.pages-button button {
+	border: none;
+	background: none;
+	padding: 5px;
+	font-family: Jomhuria;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 30px;
+	text-align: center;
+	color: #474444;
+	cursor: pointer;
+	transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Add the active state to page buttons */
+.pages-button button.active {
+	box-shadow: 2px 4px 15px rgba(1, 1, 1, 0.2);
+}
+
+.pages-button button:hover {
+	background-color: #a19d9d; /* Optional hover effect */
+}
+
+.logout-btn {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	gap: 1rem;
+	align-items: center;
+	margin: 1rem;
+}
+
+.line {
+	border: black solid 2px;
+	width: 100px;
+}
+
+.logout-btn button {
+	border: none;
+	background: none;
+	padding: 5px;
+	font-family: Jomhuria;
+	font-size: 20px;
+	font-weight: 400;
+	line-height: 30px;
+	text-align: center;
+	color: #474444;
+	cursor: pointer;
+	box-shadow: 2px 4px 15px rgba(1, 1, 1, 0.2);
+}
+
+.logout-btn button:hover {
+	background-color: #a19d9d; /* Optional hover effect */
+}

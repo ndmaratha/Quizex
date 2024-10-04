@@ -1,11 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const analisysController_1 = require("../controller/analisysController");
-const analisysRouter = express_1.default.Router();
-analisysRouter.put("/analisys/update", analisysController_1.updateAnalisys);
-analisysRouter.post("/analisys/create", analisysController_1.createAnalysis);
-exports.default = analisysRouter;
+// import express from "express";
+// import {
+// 	createAnalysis,
+// 	updateAnalisys,
+// } from "../controller/analisysController";
+// const analisysRouter = express.Router();
+// analisysRouter.put("/analisys/update", updateAnalisys);
+// analisysRouter.post("/analisys/create", createAnalysis);
+// export default analisysRouter;

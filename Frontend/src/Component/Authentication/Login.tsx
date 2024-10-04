@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { LoginState } from "../../Store/LoginState";
 
 interface LoginDetails {
 	email: string;
@@ -10,73 +15,107 @@ const Login: React.FC = () => {
 		email: "",
 		password: "",
 	});
-
+	const navigate = useNavigate();
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<boolean>(false);
+	const SetLoginState = useSetRecoilState(LoginState);
+	// Handle form input change
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setLoginDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
 	};
 
-	const handleLoginDetails = (e: React.FormEvent<HTMLFormElement>) => {
+	// Handle form submission
+	const handleLoginDetails = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(loginDetails);
+		setError(null); // Reset previous errors
+		setSuccess(false); // Reset success state
+
+		// Basic form validation
+		if (!loginDetails.email || !loginDetails.password) {
+			setError("Please fill in all fields.");
+			return;
+		}
+
+		try {
+			const response = await axios.post("http://localhost:3000/api/login", {
+				email: loginDetails.email,
+				password: loginDetails.password,
+			});
+
+			if (response.status === 200) {
+				// Successful login
+				setSuccess(true);
+				console.log("Login successful:", response.data);
+				localStorage.setItem("token", response.data.token);
+				SetLoginState(true);
+				navigate("/");
+			}
+		} catch (err: any) {
+			// Handle specific backend error responses
+			if (err.response) {
+				if (err.response.status === 401) {
+					setError("User Does Not Exist!..");
+				} else if (err.response.status === 402) {
+					setError("Invalid Password!.");
+				} else {
+					setError("An unexpected error occurred. Please try again later");
+				}
+			} else {
+				setError("Network error. Please check your connection.");
+			}
+			console.error(err);
+		}
 	};
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
-			<div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-				<h1 className="text-3xl font-bold text-center text-gray-700 mb-8">
-					Quizee
-				</h1>
+		<div className='login-container'>
+			<div className='login-box'>
+				<h1 className='login-title'>Quizee</h1>
 
-				<div className="flex justify-center space-x-4 mb-8">
-					<button className="text-blue-500 font-medium hover:text-blue-700">
+				<div className='button-group'>
+					<button className='text-button' onClick={() => navigate("/signup")}>
 						Sign up
 					</button>
-					<button className="text-blue-500 font-medium hover:text-blue-700">
-						Login
-					</button>
+					<button className='text-button-login'>Login</button>
 				</div>
 
 				<form onSubmit={handleLoginDetails}>
-					<div className="mb-4">
-						<label
-							htmlFor="email"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Email
-						</label>
-						<input
-							type="email"
-							name="email"
-							value={loginDetails.email}
-							onChange={handleChange}
-							className="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-						/>
+					<div className='form-group'>
+						<div>
+							<label htmlFor='email' className='label'>
+								Email
+							</label>
+							<input
+								type='email'
+								name='email'
+								value={loginDetails.email}
+								onChange={handleChange}
+								className='input-field'
+								required
+							/>
+						</div>
+						<div>
+							<label htmlFor='password' className='label'>
+								Password
+							</label>
+							<input
+								type='password'
+								name='password'
+								value={loginDetails.password}
+								onChange={handleChange}
+								className='input-field'
+								required
+							/>
+						</div>
 					</div>
-
-					<div className="mb-6">
-						<label
-							htmlFor="password"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Password
-						</label>
-						<input
-							type="password"
-							name="password"
-							value={loginDetails.password}
-							onChange={handleChange}
-							className="w-full px-4 py-2 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-						/>
-					</div>
-
-					<button
-						type="submit"
-						className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-lg transition duration-300"
-					>
+					<button type='submit' className='submit-button'>
 						Login
 					</button>
 				</form>
+
+				{error && <p className='error-message'>{error}</p>}
+				{success && <p className='success-message'>Login successful!</p>}
 			</div>
 		</div>
 	);

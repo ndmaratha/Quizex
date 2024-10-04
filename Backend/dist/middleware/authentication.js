@@ -21,12 +21,11 @@ const authenticateToken = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         ? authHeader.split(" ")[1]
         : null;
     if (!token)
-        return res.sendStatus(401); // Unauthorized if no token is found
+        return res
+            .sendStatus(401)
+            .json({ msg: "Token is Not Provided Or Unauthorized" }); // Unauthorized if no token is found
     try {
-        // Verify the JWT using the secret and extract the payload (e.g., user id)
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-        // Attach the userId to the request object for later use
-        req.userId = decoded.id;
         next(); // Proceed to the next middleware or route handler
     }
     catch (err) {

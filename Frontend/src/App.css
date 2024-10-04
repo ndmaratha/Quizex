@@ -1,3 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.main-container {
+	display: flex;
+	flex-direction: row;
+	background: #ededed;
+}
+
+.Main-container-sidebar {
+	flex-basis: 15%;
+	width: 200px;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	background: #ffffff;
+	box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.main-container-page {
+	flex-basis: 85%;
+	width: 800px;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.trending-heading {
+	font-family: Poppins;
+	font-size: 35px;
+	font-weight: 600;
+	line-height: 52.5px;
+	text-align: left;
+	color: #474444;
+}

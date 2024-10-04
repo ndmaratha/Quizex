@@ -1,92 +1,106 @@
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
+import { z } from "zod";
 import { prismaClient } from "../prismaClient";
 
-export const updateAnalisys = async (req: Request, res: Response) => {
-	const analisysData = req.body; // Expecting an array of analysis data
+// Define Zod schema for analysis data, now `analysisId` is a string (cuid)
+const analysisSchema = z.object({
+	analysisId: z.string().cuid().optional(), // Now a string, optional for upsert
+	questionAttemptedCount: z.number().optional(),
+	questionCorrectlyAnswered: z.number().optional(),
+	questionIncorrectlyAnswered: z.number().optional(),
+	ChosedOptionOneCount: z.number().optional(),
+	ChosedOptionTwoCount: z.number().optional(),
+	ChosedOptionThreeCount: z.number().optional(),
+	ChosedOptionFourCount: z.number().optional(),
+	questionId: z.string(), // Required field for question relation
+});
 
-	if (!Array.isArray(analisysData) || analisysData.length === 0) {
-		return res
-			.status(400)
-			.json({ msg: "No analysis data provided for update" });
+// Define Zod schema for array of analysis data
+const analysisArraySchema = z.array(analysisSchema);
+
+// Upsert multiple analysis data
+export const createOrUpdateAnalysis = async (req: Request, res: Response) => {
+	const parseResult = analysisArraySchema.safeParse(req.body);
+
+	// Handle invalid input
+	if (!parseResult.success) {
+		return res.status(400).json({ error: parseResult.error.errors });
 	}
 
+	const analysisDataArray = parseResult.data;
+
 	try {
-		// Update each analysis record one by one using a loop
-		const updatePromises = analisysData.map(async (analisys: any) => {
-			const {
-				aid,
-				q_attempted,
-				q_incorrect,
-				q_correct,
-				op1,
-				op2,
-				op3,
-				op4,
-				questionId,
-			} = analisys;
-
-			if (!aid) {
-				throw new Error(
-					"Each analysis entry must include 'aid' (analysis ID)."
-				);
-			}
-
-			// Update each analysis record
-			return await prismaClient.analysis.update({
+		// Use Promise.all to handle multiple upserts concurrently
+		const upsertPromises = analysisDataArray.map((analysisData) => {
+			return prismaClient.analysis.upsert({
 				where: {
-					aid: aid, // Match the analysis record by its primary key (aid)
+					analysisId: analysisData.analysisId || "", // If no analysisId provided, default to empty string (non-existent ID)
 				},
-				data: {
-					q_attempted,
-					q_incorrect,
-					q_correct,
-					op1,
-					op2,
-					op3,
-					op4,
-					questionId,
+				create: {
+					analysisId: analysisData.analysisId || undefined, // Create a new cuid if not provided
+					questionAttemptedCount: analysisData.questionAttemptedCount || 0,
+					questionCorrectlyAnswered:
+						analysisData.questionCorrectlyAnswered || 0,
+					questionIncorrectlyAnswered:
+						analysisData.questionIncorrectlyAnswered || 0,
+					ChosedOptionOneCount: analysisData.ChosedOptionOneCount || 0,
+					ChosedOptionTwoCount: analysisData.ChosedOptionTwoCount || 0,
+					ChosedOptionThreeCount: analysisData.ChosedOptionThreeCount || 0,
+					ChosedOptionFourCount: analysisData.ChosedOptionFourCount || 0,
+					questionId: analysisData.questionId,
+				},
+				update: {
+					questionAttemptedCount: analysisData.questionAttemptedCount,
+					questionCorrectlyAnswered: analysisData.questionCorrectlyAnswered,
+					questionIncorrectlyAnswered: analysisData.questionIncorrectlyAnswered,
+					ChosedOptionOneCount: analysisData.ChosedOptionOneCount,
+					ChosedOptionTwoCount: analysisData.ChosedOptionTwoCount,
+					ChosedOptionThreeCount: analysisData.ChosedOptionThreeCount,
+					ChosedOptionFourCount: analysisData.ChosedOptionFourCount,
 				},
 			});
 		});
 
-		// Execute all updates in parallel
-		const updatedAnalisysData = await Promise.all(updatePromises);
-
-		return res.status(200).json({
-			msg: "Analysis updated successfully",
-			updatedAnalisysData,
-		});
+		// Await all upserts to finish
+		const upsertedAnalysisData = await Promise.all(upsertPromises);
+		res.json(upsertedAnalysisData);
 	} catch (error) {
-		console.log(error);
-		return res.status(500).json({
-			msg: "Error in updating analysis",
-			error: error,
-		});
+		console.error(error);
+		res.status(500).json({ error: "Failed to upsert analysis data" });
 	}
 };
 
-export const createAnalysis = async (req: Request, res: Response) => {
-	const analysisData = req.body; // Expecting an array of analysis data
-
-	if (!Array.isArray(analysisData) || analysisData.length === 0) {
-		return res
-			.status(400)
-			.json({ msg: "No analysis data provided for creation" });
-	}
+export const getQuizAnalysis = async (req: Request, res: Response) => {
+	const { quizId } = req.params;
 
 	try {
-		const createdAnalysis = await prismaClient.analysis.createMany({
-			data: analysisData, // Array of analysis objects
+		// Fetch all analysis related to the given quiz ID
+		const quizWithAnalysis = await prismaClient.quiz.findUnique({
+			where: {
+				quizId: quizId, // quizId comes from the request parameters
+			},
+			include: {
+				questions: {
+					include: {
+						questionAnalysis: true, // Include all related Analysis records for each question
+					},
+				},
+			},
 		});
 
-		return res.status(201).json({
-			msg: "Analysis records created successfully",
-			createdAnalysis,
-		});
+		// If no quiz is found, return a 404 error
+		if (!quizWithAnalysis) {
+			return res.status(404).json({ error: "Quiz not found" });
+		}
+
+		// Extract the analysis data from the questions
+		const analysisData = quizWithAnalysis.questions.flatMap(
+			(question) => question.questionAnalysis
+		);
+
+		res.json(analysisData); // Return the analysis data for the specific quiz
 	} catch (error) {
-		return res.status(500).json({
-			msg: "Error creating analysis records",
-			error: error,
-		});
+		console.error(error);
+		res.status(500).json({ error: "Failed to retrieve analysis data" });
 	}
 };

@@ -22,7 +22,7 @@ exports.secretKey = "your-secret-key";
 const userSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
     password: zod_1.z.string().min(6, "Password must be at least 6 characters long"),
-    name: zod_1.z.string(),
+    userName: zod_1.z.string(),
 });
 const loginSchema = zod_1.z.object({
     email: zod_1.z.string().email(),
@@ -33,7 +33,9 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate the user data using zod schema
     const resp = loginSchema.safeParse(user);
     if (!resp.success) {
-        return res.status(400).json({ error: resp.error.errors });
+        return res
+            .status(400)
+            .json({ error: resp.error.errors, msg: "error in Zod Checking" });
     }
     try {
         // Find the user by email
@@ -41,29 +43,29 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             where: { email: user.email },
         });
         if (!existingUser) {
-            return res.status(401).json({ error: "Invalid email or password" });
+            return res.status(401).json({ error: "User with Email Does Not Exist!" });
         }
         // Verify the password
         const passwordMatch = yield bcryptjs_1.default.compare(user.password, existingUser.password);
         if (!passwordMatch) {
-            return res.status(401).json({ error: "Invalid email or password" });
+            return res.status(402).json({ error: "Invalid password" });
         }
         // Generate a JWT token
-        const token = jsonwebtoken_1.default.sign({ id: existingUser.id, email: existingUser.email }, exports.secretKey, {
+        const token = jsonwebtoken_1.default.sign({ email: existingUser.email }, exports.secretKey, {
             expiresIn: "48h",
         });
         // Send response with the token and user data
-        res.json({
+        res.status(200).json({
             token,
             user: {
-                id: existingUser.id,
+                id: existingUser.userId,
                 email: existingUser.email,
-                name: existingUser.name,
+                userName: existingUser.userName,
             },
         });
     }
     catch (error) {
-        res.status(500).json({ error: "An unexpected error occurred" });
+        res.status(400).json({ error: "An unexpected error occurred while Login" });
     }
 });
 exports.login = login;
@@ -72,7 +74,9 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate the user data using zod schema
     const resp = userSchema.safeParse(user);
     if (!resp.success) {
-        return res.status(400).json({ error: resp.error.errors });
+        return res
+            .status(400)
+            .json({ error: resp.error.errors, msg: "error in zod checking" });
     }
     try {
         //Check if the email already exists
@@ -87,15 +91,19 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const hashedPassword = yield bcryptjs_1.default.hash(user.password, salt);
         const newUser = yield prismaClient_1.prismaClient.user.create({
             data: {
-                name: user.name,
+                userName: user.userName,
                 email: user.email,
                 password: hashedPassword,
             },
         });
-        return res.json({ user: newUser.name });
+        return res
+            .status(200)
+            .json({ user: newUser.userName, msg: "User Created Successfully!" });
     }
     catch (error) {
-        res.status(500).json({ error: "An unexpected error occurred" });
+        res
+            .status(400)
+            .json({ error: "An unexpected error occurred while SignIn!" });
     }
 });
 exports.signup = signup;

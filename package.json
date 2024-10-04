@@ -1,0 +1,10 @@
+{
+	"scripts": {
+		"start": "concurrently --names \"BACKEND,FRONTEND\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" \"npm run server\" \"npm run client\"",
+		"server": "cd Backend && tsc -b && npm start",
+		"client": "cd Frontend && npm run dev"
+	},
+	"devDependencies": {
+		"concurrently": "^9.0.1"
+	}
+}
