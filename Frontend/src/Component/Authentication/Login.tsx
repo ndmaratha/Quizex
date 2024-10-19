@@ -3,7 +3,7 @@ import "./Login.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
-import { LoginState } from "../../Store/LoginState";
+import { LoginState, UserInfo } from "../../Store/LoginState";
 
 interface LoginDetails {
 	email: string;
@@ -20,6 +20,7 @@ const Login: React.FC = () => {
 	const [success, setSuccess] = useState<boolean>(false);
 	const SetLoginState = useSetRecoilState(LoginState);
 	// Handle form input change
+	const setUserInfo = useSetRecoilState(UserInfo);
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setLoginDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
@@ -47,8 +48,15 @@ const Login: React.FC = () => {
 				// Successful login
 				setSuccess(true);
 				console.log("Login successful:", response.data);
+				console.log("Login successful:", response.data.user.id);
 				localStorage.setItem("token", response.data.token);
+				localStorage.setItem("userId", response.data.user.id);
 				SetLoginState(true);
+				setUserInfo({
+					id: response.data.user.id,
+					userName: response.data.user.userName,
+				});
+				console.log(response.data.userId);
 				navigate("/");
 			}
 		} catch (err: any) {

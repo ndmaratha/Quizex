@@ -1,0 +1,112 @@
+.wrapper {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.mainDivCreateQuiz {
+	width: 645px;
+	height: 322px;
+
+	border-radius: 10px 0px 0px 0px;
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(5px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+}
+.quizName {
+	width: 403px;
+	height: 51px;
+	border-radius: 10px;
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+	background: rgba(255, 255, 255, 1);
+	font-family: Poppins;
+	font-size: 25px;
+	font-weight: 500;
+	line-height: 37.5px;
+	text-align: left;
+	color: rgba(159, 159, 159, 1);
+	border: none;
+}
+.quizType {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	align-items: center;
+	gap: 1rem;
+	width: 403px;
+	height: 51px;
+}
+.quizType p {
+	font-family: Poppins;
+	font-size: 25px;
+	font-weight: 500;
+	line-height: 37.5px;
+	text-align: left;
+	color: rgba(159, 159, 159, 1);
+}
+.quizType button {
+	width: 101px;
+	height: 30px;
+	border-radius: 10px;
+	font-family: Poppins;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	border: none;
+	color: rgba(159, 159, 159, 1);
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+}
+
+.quizType .active {
+	background: rgba(96, 184, 75, 1);
+	color: white;
+	border: none;
+}
+.CreateCancleBtn {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+	gap: 2rem;
+	align-items: center;
+}
+.CreateCancleBtn .CancleBtn {
+	width: 200px;
+	height: 30px;
+	border-radius: 10px;
+	border: none;
+	font-family: Poppins;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	color: rgba(159, 159, 159, 1);
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+}
+
+.CreateCancleBtn .CreateBtn {
+	width: 200px;
+	height: 30px;
+	border-radius: 10px;
+	font-family: Poppins;
+	font-size: 20px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	background: rgba(96, 184, 75, 1);
+	color: white;
+	border: none;
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+}
+
+.questionNotSelected {
+	display: none;
+}

@@ -5,7 +5,7 @@ import { z } from "zod";
 // Define the question schema
 const questionSchema = z.object({
 	questionTitle: z.string(),
-	optionType: z.enum(["single", "multiple"]),
+	optionType: z.enum(["text", "image", "imageAndText"]),
 	optionOne: z.string(),
 	optionTwo: z.string(),
 	optionThree: z.string().nullable().optional(), // Optional and nullable
@@ -223,29 +223,14 @@ export const quizCreatedBySpecificUser = async (
 export const showTrendingQuizzes = async (req: Request, res: Response) => {
 	try {
 		let trendingQuizzes = await prismaClient.quiz.findMany({
-			where: {
-				quizImpression: {
-					gt: 10, // Find quizzes with impressions greater than 10
-				},
+			orderBy: {
+				quizImpression: "desc", // Sort by impressions in descending order
 			},
 			include: {
 				questions: true, // Include related questions in the result
 			},
-			take: 12, // Limit the result to 12 quizzes
 		});
 
-		// Fallback to quizzes sorted by high impressions if no trending quizzes are found
-		if (trendingQuizzes.length < 12) {
-			trendingQuizzes = await prismaClient.quiz.findMany({
-				orderBy: {
-					quizImpression: "desc", // Sort by impressions in descending order
-				},
-				include: {
-					questions: true, // Include related questions in the result
-				},
-				take: 12, // Limit to 12 quizzes
-			});
-		}
 		return res.status(200).json(trendingQuizzes);
 	} catch (error) {
 		console.error(error);

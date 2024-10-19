@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
 import axios from "axios";
+import TrendingQuizCard from "../Component/TrendingQuizCard";
+import { fetchTotalCounts, fetchTrendingQuiz } from "../utils/Helper";
 
 const Dashboard: React.FC = () => {
 	const [totalCount, setTotalCount] = useState({
@@ -10,26 +12,12 @@ const Dashboard: React.FC = () => {
 		questionCount: 0,
 		impressionCount: 0,
 	});
+	const [trendingQuiz, setTrendingQuiz] = useState([]);
+	const [loading, setLoading] = useState(false);
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const res = await axios.post("http://localhost:3000/quiz/totalCount");
-
-				// Assuming your server response is like:
-				// { "totalImpression": 13, "totalQuestionCount": 9, "totalQuizCount": 3 }
-
-				setTotalCount({
-					quizCount: res.data.totalQuizCount,
-					questionCount: res.data.totalQuestionCount,
-					impressionCount: res.data.totalImpression,
-				});
-			} catch (error) {
-				console.error("Error fetching total counts:", error);
-			}
-		};
-
-		fetchData();
-	}, [totalCount]);
+		fetchTotalCounts(setTotalCount);
+		fetchTrendingQuiz(setTrendingQuiz, setLoading);
+	}, []);
 	return (
 		<div className='main-container-page'>
 			<div className='first-div'>
@@ -48,7 +36,24 @@ const Dashboard: React.FC = () => {
 			</div>
 			<div className='trending-quiz'>
 				<div className='trending-heading'>Trending Quizzes</div>
-				<div className='quiz-container'></div>
+				<div className='quiz-container'>
+					{loading ? (
+						<div>loading</div>
+					) : (
+						<>
+							{trendingQuiz.map((data: any, index) => {
+								return (
+									<TrendingQuizCard
+										key={data.quizId}
+										quizCreatedOn={data.quizCreatedOn}
+										number={index}
+										quizImpression={data.quizImpression}
+									/>
+								);
+							})}
+						</>
+					)}
+				</div>
 			</div>
 		</div>
 	);

@@ -1,0 +1,268 @@
+.mainDiv {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 445px;
+	height: 371px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 1);
+	gap: 1rem;
+}
+.questionNoDiv {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 75%;
+}
+.questions {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+}
+/* Parent container for each question */
+.questionItem {
+	position: relative; /* Make it a positioning context for the button */
+}
+
+/* Style for the question number */
+.questions p {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	width: 28px;
+	height: 28px;
+	border-radius: 30px;
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+	position: relative;
+	z-index: 1;
+	margin: 0;
+}
+
+/* Style for the remove button */
+.questions .removeButton {
+	position: absolute;
+	top: -5px; /* Adjusted to move it outside and overlap */
+	right: -5px; /* Adjusted to move it outside and overlap */
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	z-index: 2;
+	font-size: 10px;
+	color: red; /* Optional: Color to make the 'x' more visible */
+	cursor: pointer;
+}
+
+.questionNoDiv .maxQuestion {
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	color: rgba(159, 159, 159, 1);
+}
+
+.pollQuestion {
+	width: 75%;
+	height: 50px;
+	border-radius: 10px;
+	border: none;
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+	cursor: pointer;
+	padding-left: 10px;
+}
+.pollQuestion::placeholder {
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: left;
+	color: rgba(159, 159, 159, 1);
+}
+.pollQuestion:focus {
+	caret-color: black;
+	border-color: blue; /* Changes border color on focus */
+	outline: none;
+}
+.optionType {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+}
+
+.optionType label {
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	color: rgba(159, 159, 159, 1);
+}
+.optionType input[type="radio"] {
+	accent-color: black; /* Changes the color of the radio button */
+	margin-right: 8px; /* Space between the radio button and label text */
+}
+.optionType label:hover {
+	color: #555; /* Changes the text color on hover */
+}
+.optionsAndTimerCombineDiv {
+	width: 75%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+}
+.optionsAndTimerCombineDiv .options {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.optionsAndTimerCombineDiv .questionTimer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: baseline;
+	gap: 0.2rem;
+}
+
+.CreateCancleBtn {
+	display: flex;
+	flex-basis: 75%;
+	flex-direction: row;
+	justify-content: space-around;
+	gap: 2rem;
+	align-items: center;
+}
+.CreateCancleBtn .CancleBtn {
+	width: 150px;
+	height: 25px;
+	border-radius: 10px;
+	border: none;
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	color: rgba(159, 159, 159, 1);
+	background: rgba(255, 255, 255, 1);
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+}
+
+.CreateCancleBtn .CreateBtn {
+	width: 150px;
+	height: 25px;
+	border-radius: 10px;
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	background: rgba(96, 184, 75, 1);
+	color: white;
+	border: none;
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* Highlight the input field when the correct option is selected */
+.selectedInput {
+	border: none;
+	background: #60b84b;
+	border-radius: 10px;
+	width: 150px;
+	height: 25px;
+	border-radius: 10px;
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+}
+.optionInput {
+	border: none;
+	box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.15);
+	border-radius: 10px;
+	width: 150px;
+	height: 25px;
+	border-radius: 10px;
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+}
+.optionInput::placeholder {
+	color: rgba(159, 159, 159, 1);
+}
+.selectedInput::placeholder {
+	color: white;
+}
+.correctOption input[type="radio"] {
+	accent-color: green; /* Change the radio button color to green */
+}
+
+.addOption {
+	box-shadow: 0px 0px 25px 0px #00000026;
+	background: #ffffff;
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 30px;
+	text-align: center;
+	color: #9f9f9f;
+	border: none;
+	border-radius: 10px;
+}
+.forOptionThirdAndFour {
+	display: flex;
+	flex-direction: row;
+	gap: 0.2rem;
+}
+
+.forOptionThirdAndFour .deleteBtn {
+	width: 16px;
+	height: 18px;
+	color: #d60000;
+}
+.timerBtn {
+	width: 70px;
+	height: 20px;
+	box-shadow: 0px 0px 25px 0px #00000026;
+	background: #ffffff;
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 22.5px;
+	text-align: center;
+
+	color: #9f9f9f;
+	border: none;
+	border-radius: 10px;
+}
+.activeTimer {
+	background: #d60000;
+	width: 70px;
+	height: 20px;
+	box-shadow: 0px 0px 25px 0px #00000026;
+	font-family: Poppins;
+	font-size: 15px;
+	font-weight: 500;
+	line-height: 22.5px;
+	text-align: center;
+
+	color: #ffffff;
+	border: none;
+	border-radius: 10px;
+}

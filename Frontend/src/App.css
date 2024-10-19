@@ -8,12 +8,14 @@
 	display: flex;
 	flex-direction: row;
 	background: #ededed;
+	position: relative;
+	z-index: 1;
 }
 
 .Main-container-sidebar {
 	flex-basis: 15%;
-	width: 200px;
 	height: 100vh;
+	min-height: auto;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -24,11 +26,23 @@
 
 .main-container-page {
 	flex-basis: 85%;
-	width: 800px;
+	min-height: auto;
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
+	overflow-y: scroll;
+}
+.main-container-page::-webkit-scrollbar {
+	display: none;
+}
+.main-container-page-analytics {
+	flex-basis: 85%;
+	min-height: auto;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .trending-heading {
 	font-family: Poppins;

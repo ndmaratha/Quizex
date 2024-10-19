@@ -15,7 +15,7 @@ const zod_1 = require("zod");
 // Define the question schema
 const questionSchema = zod_1.z.object({
     questionTitle: zod_1.z.string(),
-    optionType: zod_1.z.enum(["single", "multiple"]),
+    optionType: zod_1.z.enum(["text", "image", "imageAndText"]),
     optionOne: zod_1.z.string(),
     optionTwo: zod_1.z.string(),
     optionThree: zod_1.z.string().nullable().optional(), // Optional and nullable
@@ -211,28 +211,13 @@ exports.quizCreatedBySpecificUser = quizCreatedBySpecificUser;
 const showTrendingQuizzes = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let trendingQuizzes = yield prismaClient_1.prismaClient.quiz.findMany({
-            where: {
-                quizImpression: {
-                    gt: 10, // Find quizzes with impressions greater than 10
-                },
+            orderBy: {
+                quizImpression: "desc", // Sort by impressions in descending order
             },
             include: {
                 questions: true, // Include related questions in the result
             },
-            take: 12, // Limit the result to 12 quizzes
         });
-        // Fallback to quizzes sorted by high impressions if no trending quizzes are found
-        if (trendingQuizzes.length < 12) {
-            trendingQuizzes = yield prismaClient_1.prismaClient.quiz.findMany({
-                orderBy: {
-                    quizImpression: "desc", // Sort by impressions in descending order
-                },
-                include: {
-                    questions: true, // Include related questions in the result
-                },
-                take: 12, // Limit to 12 quizzes
-            });
-        }
         return res.status(200).json(trendingQuizzes);
     }
     catch (error) {

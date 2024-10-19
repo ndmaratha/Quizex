@@ -1,0 +1,24 @@
+.main-container-page {
+	flex-basis: 85%;
+	min-height: auto;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.first-div {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	margin: 0 auto;
+	flex-basis: 80%;
+}
+.analytics-heading {
+	font-family: Poppins;
+	font-size: 50px;
+	font-weight: 600;
+	line-height: 75px;
+	text-align: center;
+	color: rgba(80, 118, 255, 1);
+}

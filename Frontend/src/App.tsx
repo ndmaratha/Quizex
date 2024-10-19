@@ -6,6 +6,7 @@ import CreateQuiz from "./pages/CreateQuiz";
 import Analytics from "./pages/Analytics";
 import Dashboard from "./pages/Dashboard";
 import "./App.css";
+import QuestionCreate from "./Component/QuestionCreate";
 function App() {
 	return (
 		<div className='main-container'>

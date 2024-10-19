@@ -1,0 +1,67 @@
+/* Table styling */
+.table {
+	width: 100%;
+	border-collapse: separate; /* Change to 'separate' to allow border radius */
+	border-spacing: 0; /* Remove spacing between cells */
+	overflow-y: scroll;
+}
+
+/* Header styling */
+.table thead {
+	background: rgba(80, 118, 255, 1);
+	color: white; /* White text color */
+	font-weight: bold;
+	font-family: Poppins;
+	font-size: 16px;
+	font-weight: 600;
+	text-align: center;
+}
+
+/* Odd row styling */
+.oddRow {
+	background: rgba(237, 237, 237, 1);
+}
+
+/* Even row styling */
+.evenRow {
+	background: rgba(179, 196, 255, 1);
+}
+
+/* Cell styling with minimum width for columns */
+.table td,
+.table th {
+	padding: 8px;
+	text-align: left;
+	min-width: 50px; /* Minimum width for each column */
+	font-family: Poppins;
+	font-size: 16px;
+	font-weight: 600;
+	text-align: center;
+}
+
+/* Apply border radius to the first and last cells of each row */
+.table tbody tr td:first-child {
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+.table tbody tr td:last-child {
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+/* Apply border radius to header cells */
+.table thead th:first-child {
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
+.table thead th:last-child {
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+/* Optional: Hover effect for rows */
+.table tbody tr:hover {
+	background-color: #ddd; /* Light gray on hover */
+}

@@ -10,14 +10,10 @@ import {
 } from "../controller/quizeController";
 const quizRouter = express.Router();
 
-quizRouter.post("/quiz/create", authenticateToken, createQuizRoute);
+quizRouter.post("/quiz/create", createQuizRoute);
 quizRouter.delete("/quiz/delete/:id", deleteQuizRoute);
 quizRouter.put("/quiz/increase/:id", increaseQuizImpressionCount);
-quizRouter.post(
-	"/quiz/showtrendingquiz",
-	authenticateToken,
-	showTrendingQuizzes
-);
+quizRouter.post("/quiz/showtrendingquiz", showTrendingQuizzes);
 quizRouter.post(
 	"/quiz/quizbyuser/:id",
 	authenticateToken,
