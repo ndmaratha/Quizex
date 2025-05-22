@@ -50,7 +50,7 @@ model Analysis {
   ChosedOptionTwoCount        Int?     @default(0)
   ChosedOptionThreeCount      Int?     @default(0)
   ChosedOptionFourCount       Int?     @default(0)
-  questionId                  String
+  questionId                  String   @unique
   question                    Question @relation(fields: [questionId], references: [questionId], onDelete: Cascade)
 }
 

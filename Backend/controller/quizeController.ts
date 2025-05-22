@@ -226,9 +226,6 @@ export const showTrendingQuizzes = async (req: Request, res: Response) => {
 			orderBy: {
 				quizImpression: "desc", // Sort by impressions in descending order
 			},
-			include: {
-				questions: true, // Include related questions in the result
-			},
 		});
 
 		return res.status(200).json(trendingQuizzes);
@@ -236,6 +233,41 @@ export const showTrendingQuizzes = async (req: Request, res: Response) => {
 		console.error(error);
 		return res.status(500).json({
 			error: "Can't send Trending quizzes",
+			details: error instanceof Error ? error.message : "Unknown error",
+		});
+	}
+};
+
+export const singleQuiz = async (req: Request, res: Response) => {
+	const quizId = req.params.id;
+
+	// Validate the userId
+	const CorrectQuizFormat = userIdSchema.safeParse(quizId);
+	if (!CorrectQuizFormat.success) {
+		const errors = CorrectQuizFormat.error.errors.map((err) => ({
+			path: err.path.join(" > "),
+			message: err.message,
+		}));
+
+		return res.status(400).json({
+			msg: "Validation error",
+			errors,
+		});
+	}
+	try {
+		let singleQuiz = await prismaClient.quiz.findUnique({
+			where: {
+				quizId: quizId,
+			},
+			include: {
+				questions: true,
+			},
+		});
+		return res.status(200).json(singleQuiz);
+	} catch (error) {
+		console.error(error);
+		return res.status(400).json({
+			error: "Can't find quiz",
 			details: error instanceof Error ? error.message : "Unknown error",
 		});
 	}

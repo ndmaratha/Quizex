@@ -7,6 +7,7 @@ import Analytics from "./pages/Analytics";
 import Dashboard from "./pages/Dashboard";
 import "./App.css";
 import QuestionCreate from "./Component/QuestionCreate";
+import AttendQuiz from "./pages/AttendQuiz/AttendQuiz";
 function App() {
 	return (
 		<div className='main-container'>
@@ -41,6 +42,10 @@ export const appRouter = createBrowserRouter([
 	{
 		path: "/signup",
 		element: <Signup />,
+	},
+	{
+		path: "/quizPage/:id",
+		element: <AttendQuiz />,
 	},
 ]);
 export default App;

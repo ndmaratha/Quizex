@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import "./Dashboard.css";
-import axios from "axios";
 import TrendingQuizCard from "../Component/TrendingQuizCard";
 import { fetchTotalCounts, fetchTrendingQuiz } from "../utils/Helper";
+import { Link } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
 	const [totalCount, setTotalCount] = useState({
@@ -43,12 +43,13 @@ const Dashboard: React.FC = () => {
 						<>
 							{trendingQuiz.map((data: any, index) => {
 								return (
-									<TrendingQuizCard
-										key={data.quizId}
-										quizCreatedOn={data.quizCreatedOn}
-										number={index}
-										quizImpression={data.quizImpression}
-									/>
+									<Link key={data.quizId} to={`/quizPage/${data.quizId}`}>
+										<TrendingQuizCard
+											quizCreatedOn={data.quizCreatedOn}
+											number={index}
+											quizImpression={data.quizImpression}
+										/>
+									</Link>
 								);
 							})}
 						</>

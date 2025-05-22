@@ -22,7 +22,7 @@ const analysisSchema = zod_1.z.object({
     ChosedOptionTwoCount: zod_1.z.number().optional(),
     ChosedOptionThreeCount: zod_1.z.number().optional(),
     ChosedOptionFourCount: zod_1.z.number().optional(),
-    questionId: zod_1.z.string(), // Required field for question relation
+    questionId: zod_1.z.string().cuid(), // Required field for question relation
 });
 // Define Zod schema for array of analysis data
 const analysisArraySchema = zod_1.z.array(analysisSchema);
@@ -36,10 +36,14 @@ const createOrUpdateAnalysis = (req, res) => __awaiter(void 0, void 0, void 0, f
     const analysisDataArray = parseResult.data;
     try {
         // Use Promise.all to handle multiple upserts concurrently
-        const upsertPromises = analysisDataArray.map((analysisData) => {
+        const upsertPromises = analysisDataArray.map((analysisData) => __awaiter(void 0, void 0, void 0, function* () {
+            // Fetch the existing analysis data by questionId
+            const existingAnalysis = yield prismaClient_1.prismaClient.analysis.findUnique({
+                where: { questionId: analysisData.questionId },
+            });
             return prismaClient_1.prismaClient.analysis.upsert({
                 where: {
-                    analysisId: analysisData.analysisId || "", // If no analysisId provided, default to empty string (non-existent ID)
+                    questionId: analysisData.questionId, // Use questionId for the upsert
                 },
                 create: {
                     analysisId: analysisData.analysisId || undefined, // Create a new cuid if not provided
@@ -50,19 +54,26 @@ const createOrUpdateAnalysis = (req, res) => __awaiter(void 0, void 0, void 0, f
                     ChosedOptionTwoCount: analysisData.ChosedOptionTwoCount || 0,
                     ChosedOptionThreeCount: analysisData.ChosedOptionThreeCount || 0,
                     ChosedOptionFourCount: analysisData.ChosedOptionFourCount || 0,
-                    questionId: analysisData.questionId,
+                    questionId: analysisData.questionId, // Required for relation
                 },
                 update: {
-                    questionAttemptedCount: analysisData.questionAttemptedCount,
-                    questionCorrectlyAnswered: analysisData.questionCorrectlyAnswered,
-                    questionIncorrectlyAnswered: analysisData.questionIncorrectlyAnswered,
-                    ChosedOptionOneCount: analysisData.ChosedOptionOneCount,
-                    ChosedOptionTwoCount: analysisData.ChosedOptionTwoCount,
-                    ChosedOptionThreeCount: analysisData.ChosedOptionThreeCount,
-                    ChosedOptionFourCount: analysisData.ChosedOptionFourCount,
+                    questionAttemptedCount: ((existingAnalysis === null || existingAnalysis === void 0 ? void 0 : existingAnalysis.questionAttemptedCount) || 0) +
+                        (analysisData.questionAttemptedCount || 0),
+                    questionCorrectlyAnswered: ((existingAnalysis === null || existingAnalysis === void 0 ? void 0 : existingAnalysis.questionCorrectlyAnswered) || 0) +
+                        (analysisData.questionCorrectlyAnswered || 0),
+                    questionIncorrectlyAnswered: ((existingAnalysis === null || existingAnalysis === void 0 ? void 0 : existingAnalysis.questionIncorrectlyAnswered) || 0) +
+                        (analysisData.questionIncorrectlyAnswered || 0),
+                    ChosedOptionOneCount: ((existingAnalysis === null || existingAnalysis === void 0 ? void 0 : existingAnalysis.ChosedOptionOneCount) || 0) +
+                        (analysisData.ChosedOptionOneCount || 0),
+                    ChosedOptionTwoCount: ((existingAnalysis === null || existingAnalysis === void 0 ? void 0 : existingAnalysis.ChosedOptionTwoCount) || 0) +
+                        (analysisData.ChosedOptionTwoCount || 0),
+                    ChosedOptionThreeCount: ((existingAnalysis === null || existingAnalysis === void 0 ? void 0 : existingAnalysis.ChosedOptionThreeCount) || 0) +
+                        (analysisData.ChosedOptionThreeCount || 0),
+                    ChosedOptionFourCount: ((existingAnalysis === null || existingAnalysis === void 0 ? void 0 : existingAnalysis.ChosedOptionFourCount) || 0) +
+                        (analysisData.ChosedOptionFourCount || 0),
                 },
             });
-        });
+        }));
         // Await all upserts to finish
         const upsertedAnalysisData = yield Promise.all(upsertPromises);
         res.json(upsertedAnalysisData);

@@ -12,7 +12,7 @@ const analysisSchema = z.object({
 	ChosedOptionTwoCount: z.number().optional(),
 	ChosedOptionThreeCount: z.number().optional(),
 	ChosedOptionFourCount: z.number().optional(),
-	questionId: z.string(), // Required field for question relation
+	questionId: z.string().cuid(), // Required field for question relation
 });
 
 // Define Zod schema for array of analysis data
@@ -31,10 +31,15 @@ export const createOrUpdateAnalysis = async (req: Request, res: Response) => {
 
 	try {
 		// Use Promise.all to handle multiple upserts concurrently
-		const upsertPromises = analysisDataArray.map((analysisData) => {
+		const upsertPromises = analysisDataArray.map(async (analysisData) => {
+			// Fetch the existing analysis data by questionId
+			const existingAnalysis = await prismaClient.analysis.findUnique({
+				where: { questionId: analysisData.questionId },
+			});
+
 			return prismaClient.analysis.upsert({
 				where: {
-					analysisId: analysisData.analysisId || "", // If no analysisId provided, default to empty string (non-existent ID)
+					questionId: analysisData.questionId, // Use questionId for the upsert
 				},
 				create: {
 					analysisId: analysisData.analysisId || undefined, // Create a new cuid if not provided
@@ -47,16 +52,30 @@ export const createOrUpdateAnalysis = async (req: Request, res: Response) => {
 					ChosedOptionTwoCount: analysisData.ChosedOptionTwoCount || 0,
 					ChosedOptionThreeCount: analysisData.ChosedOptionThreeCount || 0,
 					ChosedOptionFourCount: analysisData.ChosedOptionFourCount || 0,
-					questionId: analysisData.questionId,
+					questionId: analysisData.questionId, // Required for relation
 				},
 				update: {
-					questionAttemptedCount: analysisData.questionAttemptedCount,
-					questionCorrectlyAnswered: analysisData.questionCorrectlyAnswered,
-					questionIncorrectlyAnswered: analysisData.questionIncorrectlyAnswered,
-					ChosedOptionOneCount: analysisData.ChosedOptionOneCount,
-					ChosedOptionTwoCount: analysisData.ChosedOptionTwoCount,
-					ChosedOptionThreeCount: analysisData.ChosedOptionThreeCount,
-					ChosedOptionFourCount: analysisData.ChosedOptionFourCount,
+					questionAttemptedCount:
+						(existingAnalysis?.questionAttemptedCount || 0) +
+						(analysisData.questionAttemptedCount || 0),
+					questionCorrectlyAnswered:
+						(existingAnalysis?.questionCorrectlyAnswered || 0) +
+						(analysisData.questionCorrectlyAnswered || 0),
+					questionIncorrectlyAnswered:
+						(existingAnalysis?.questionIncorrectlyAnswered || 0) +
+						(analysisData.questionIncorrectlyAnswered || 0),
+					ChosedOptionOneCount:
+						(existingAnalysis?.ChosedOptionOneCount || 0) +
+						(analysisData.ChosedOptionOneCount || 0),
+					ChosedOptionTwoCount:
+						(existingAnalysis?.ChosedOptionTwoCount || 0) +
+						(analysisData.ChosedOptionTwoCount || 0),
+					ChosedOptionThreeCount:
+						(existingAnalysis?.ChosedOptionThreeCount || 0) +
+						(analysisData.ChosedOptionThreeCount || 0),
+					ChosedOptionFourCount:
+						(existingAnalysis?.ChosedOptionFourCount || 0) +
+						(analysisData.ChosedOptionFourCount || 0),
 				},
 			});
 		});

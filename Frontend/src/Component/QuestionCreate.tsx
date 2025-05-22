@@ -73,16 +73,6 @@ const QuestionCreate: React.FC = () => {
 					};
 				})
 				.filter(Boolean); // Remove any null values from invalid questions
-
-			// // Check if all questions are valid
-			// if (questionsArr.length !== question.questionInfo.length) {
-			// 	console.error("Some questions have invalid values.");
-			// 	setError(
-			// 		"Enter the data for all Question OR Remove the question which is not needed"
-			// 	);
-			// 	return;
-			// }
-
 			const payload = {
 				quizName,
 				quizType,

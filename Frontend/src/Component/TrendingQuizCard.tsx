@@ -1,7 +1,7 @@
 import React from "react";
 import "./TrendingQuizCard.css";
+
 interface QuizCardProps {
-	key: any;
 	quizCreatedOn: string;
 	number: number;
 	quizImpression: number;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.showTrendingQuizzes = exports.quizCreatedBySpecificUser = exports.totalCountOfQuiz_Question_Impression = exports.increaseQuizImpressionCount = exports.deleteQuizRoute = exports.createQuizRoute = void 0;
+exports.singleQuiz = exports.showTrendingQuizzes = exports.quizCreatedBySpecificUser = exports.totalCountOfQuiz_Question_Impression = exports.increaseQuizImpressionCount = exports.deleteQuizRoute = exports.createQuizRoute = void 0;
 const prismaClient_1 = require("../prismaClient");
 const zod_1 = require("zod");
 // Define the question schema
@@ -214,9 +214,6 @@ const showTrendingQuizzes = (req, res) => __awaiter(void 0, void 0, void 0, func
             orderBy: {
                 quizImpression: "desc", // Sort by impressions in descending order
             },
-            include: {
-                questions: true, // Include related questions in the result
-            },
         });
         return res.status(200).json(trendingQuizzes);
     }
@@ -229,3 +226,37 @@ const showTrendingQuizzes = (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.showTrendingQuizzes = showTrendingQuizzes;
+const singleQuiz = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const quizId = req.params.id;
+    // Validate the userId
+    const CorrectQuizFormat = userIdSchema.safeParse(quizId);
+    if (!CorrectQuizFormat.success) {
+        const errors = CorrectQuizFormat.error.errors.map((err) => ({
+            path: err.path.join(" > "),
+            message: err.message,
+        }));
+        return res.status(400).json({
+            msg: "Validation error",
+            errors,
+        });
+    }
+    try {
+        let singleQuiz = yield prismaClient_1.prismaClient.quiz.findUnique({
+            where: {
+                quizId: quizId,
+            },
+            include: {
+                questions: true,
+            },
+        });
+        return res.status(200).json(singleQuiz);
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(400).json({
+            error: "Can't find quiz",
+            details: error instanceof Error ? error.message : "Unknown error",
+        });
+    }
+});
+exports.singleQuiz = singleQuiz;
